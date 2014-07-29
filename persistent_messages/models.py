@@ -1,8 +1,8 @@
 import persistent_messages
 from persistent_messages.constants import PERSISTENT_MESSAGE_LEVELS
 from django.db import models
-from django.contrib.auth.models import User 
 from django.utils.encoding import force_unicode
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.messages import utils
 from django.utils.translation import ugettext_lazy as _
@@ -11,8 +11,8 @@ from django.utils.encoding import force_unicode
 LEVEL_TAGS = utils.get_level_tags()
 
 class Message(models.Model):
-    user = models.ForeignKey(User, blank=True, null=True)
-    from_user = models.ForeignKey(User, blank=True, null=True, related_name="from_user")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
+    from_user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name="from_user")
     subject = models.CharField(max_length=255, blank=True, default='')
     message = models.TextField()
     LEVEL_CHOICES = (
@@ -83,4 +83,4 @@ class Message(models.Model):
             return u' '.join([label_tag, read_tag])
         return read_tag
     tags = property(_get_tags)
-    
+
